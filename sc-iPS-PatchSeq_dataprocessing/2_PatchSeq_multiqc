@@ -1,0 +1,19 @@
+#!/bin/bash
+
+base=~/homes/Bardy_PatchSeq_sc
+trimmed=${base}/2_trimmomatic_fastq_trimmed
+
+## Run MultiQC analysis on FASTQC reports generated before trimming
+qcdata_beforetrim=${base}/1a_fastqc
+cd ${qcdata_beforetrim}
+multiqc ${qcdata_beforetrim}
+
+## Run FASTQC on all trimmed fastq files
+## Then run MultiQC analysis on FASTQC reports generated after trimming
+mkdir -p ${base}/2a_fastqc_trimmed
+for file in ${trimmed}/*.fastq.gz; do
+fastqc -o ${base}/2a_fastqc_trimmed/ $file
+done
+qcdata_aftertrim=${base}/2a_fastqc_trimmed
+cd ${qcdata_aftertrim}
+multiqc ${qcdata_aftertrim}

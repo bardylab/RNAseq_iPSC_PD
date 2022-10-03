@@ -1,0 +1,14 @@
+#!/bin/bash
+
+base=~/homes
+trimmed=${base}/Bardy_PatchSeq_sc/2_trimmomatic_fastq_trimmed_T4and5only
+outdir=${base}/Bardy_PatchSeq_sc/7_salmon_output_T4and5only
+mkdir -p ${outdir}
+index=${base}/salmon_sa_index_GRCh38
+
+## Pseudo-align trimmed fastq files and quantify transcript abundances with salmon
+for f1 in ${trimmed}/*R1_trimmed_paired.fastq.gz; do
+f2=${f1//R1_trimmed_paired.fastq.gz/R2_trimmed_paired.fastq.gz}
+mkdir -p ${outdir}/`basename $f1 _R1_trimmed_paired.fastq.gz`
+salmon quant -i ${index} -l A -1 $f1 -2 $f2 --validateMappings -o ${outdir}/`basename $f1 _R1_trimmed_paired.fastq.gz`/ -p 8 --writeUnmappedNames --gcBias --biasSpeedSamp 5
+done

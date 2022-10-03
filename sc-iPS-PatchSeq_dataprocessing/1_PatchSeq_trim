@@ -1,0 +1,20 @@
+#!/bin/bash
+
+base=~/homes/Bardy_PatchSeq_sc
+fastq=${base}/1_fastq
+mkdir -p ${base}/logfiles
+logfiles=${base}/logfiles
+mkdir -p ${base}/1a_fastqc
+
+for R1 in ${fastq}/*_R1.fastq.gz; do
+    R2=${R1//R1.fastq.gz/R2.fastq.gz}
+    R1paired=${R1//.fastq.gz/_trimmed_paired.fastq.gz}
+    R1unpaired=${R1//.fastq.gz/_trimmed_unpaired.fastq.gz}
+    R2paired=${R2//.fastq.gz/_trimmed_paired.fastq.gz}
+    R2unpaired=${R2//.fastq.gz/_trimmed_unpaired.fastq.gz}
+    ## Run FASTQC
+    fastqc -o ${base}/1a_fastqc $R1
+    fastqc -o ${base}/1a_fastqc $R2
+    ## Trim with Trimmomatic using a custom list of adapter sequences
+    trimmomatic PE -threads 16 -phred33 -trimlog ${logfiles}/`basename $R1 _R1.fastq.gz`_Trimmomatic_report.log $R1 $R2 $R1paired $R1unpaired $R2paired $R2unpaired ILLUMINACLIP:${base}/adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+done >> ${logfiles}/trim_out.log
