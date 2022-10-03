@@ -1,0 +1,18 @@
+#!/bin/bash
+
+base=~/homes/Shong_DAN_bulk
+fastq=${base}/1_fastq_renamed_concatenated
+logfile=${base}/Shong_trim.log
+
+## Remove renamed FASTQ files to save hard drive space
+rm -r ${base}/1_fastq_renamed
+
+## Run TrimGalore on each FASTQ file to trim low-quality ends from reads in addition to Illumina adapter removal
+for i in ${fastq}/*.fastq.gz; do
+	## Run FASTQC
+	mkdir -p ${base}/1a_fastqc
+	fastqc -o ${base}/1a_fastqc/ $i
+	## Trim with TrimGalore on default settings
+	mkdir -p ${base}/2_trimgalore_fastq_trimmed
+	trim_galore --quality 20 --fastqc --phred33 --gzip --cores 4 --output_dir ${base}/2_trimgalore_fastq_trimmed/ $i
+done >> $logfile

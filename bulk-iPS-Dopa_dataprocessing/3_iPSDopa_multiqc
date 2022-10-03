@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#!/bin/bash
+
+base=~/homes/Shong_DAN_bulk
+trimmed=${base}/2_trimgalore_fastq_trimmed
+
+## Run MultiQC analysis on FASTQC reports generated before and after trimming
+qcdata_beforetrim=${base}/1a_fastqc
+cd ${qcdata_beforetrim}
+multiqc .
+
+mkdir -p ${base}/2a_fastqc_trimmed
+mv ${trimmed}/*.zip ${base}/2a_fastqc_trimmed
+mv ${trimmed}/*.html ${base}/2a_fastqc_trimmed
+qcdata_aftertrim=${base}/2a_fastqc_trimmed
+cd ${qcdata_aftertrim}
+multiqc .
