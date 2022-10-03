@@ -1,0 +1,13 @@
+#!/bin/bash
+
+base=~/homes
+fastq=${base}/Fernandes_DAN_sc/1_fastq
+index=${base}/salmon_sa_index_GRCh38
+
+mkdir -p ${base}/Fernandes_DAN_sc/2_salmon_alevin_output
+mkdir -p ${base}/Fernandes_DAN_sc/2_salmon_alevin_output/HET_UNT
+mkdir -p ${base}/Fernandes_DAN_sc/2_salmon_alevin_output/WT_UNT
+
+salmon alevin -lISR -1 ${fastq}/HET_UNT_1.fq.gz -2 ${fastq}/HET_UNT_2.fq.gz --chromium -i ${index} -p 10 -o ${base}/Fernandes_DAN_sc/2_salmon_alevin_output/HET_UNT --tgMap ${base}/txp2gene.tsv --dumpFeatures
+
+salmon alevin -lISR -1 ${fastq}/WT_UNT_1.fq.gz -2 ${fastq}/WT_UNT_2.fq.gz --chromium -i ${index} -p 10 -o ${base}/Fernandes_DAN_sc/2_salmon_alevin_output/WT_UNT --tgMap ${base}/txp2gene.tsv --dumpFeatures
