@@ -1,0 +1,13 @@
+#!/bin/bash
+
+base=/homes/Svendsen_Laperle
+SRA=${base}/0_SRA
+mkdir -p ${base}/1_fastq
+fastq=${base}/1_fastq
+
+## Run fastqdump (SRA Toolkit) on each SRA file to convert to FASTQs
+
+cd ${SRA}
+for i in ${SRA}/*.sra; do
+	fastq-dump --outdir ${fastq} --gzip --readids --dumpbase --split-3 --clip $i
+done

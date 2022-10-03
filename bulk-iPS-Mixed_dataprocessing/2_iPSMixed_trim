@@ -1,0 +1,15 @@
+#!/bin/bash
+
+base=/homes/Svendsen_Laperle
+fastq=${base}/1_fastq
+
+## Run TrimGalore on each FASTQ file to trim low-quality ends from reads in addition to Illumina adapter removal
+
+for i in ${fastq}/*.fastq.gz; do
+	## Run FastQC
+	mkdir -p ${base}/1a_fastqc
+	fastqc -o ${base}/1a_fastqc/ $i
+	## Trim with TrimGalore on default settings
+	mkdir -p ${base}/2_trimgalore_fastq_trimmed
+	trim_galore --quality 20 --fastqc --phred33 --gzip --output_dir ${base}/2_trimgalore_fastq_trimmed/ $i
+done

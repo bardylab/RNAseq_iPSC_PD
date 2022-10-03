@@ -1,0 +1,13 @@
+#!/bin/bash
+
+base=~/homes
+trimmed=${base}/Svendsen_DAN_bulk/2_trimgalore_fastq_trimmed
+outdir=${base}/Svendsen_DAN_bulk/6_salmon_output
+mkdir -p ${outdir}
+index=${base}/salmon_sa_index_GRCh38
+
+## Pseudo-align trimmed fastq files and quantify transcript abundances with salmon
+for i in ${trimmed}/*_trimmed.fq.gz; do
+	mkdir -p ${outdir}/`basename $i _trimmed.fq.gz`
+	salmon quant -i ${index} -l A -r $i --validateMappings -o ${outdir}/`basename $i _trimmed.fq.gz`/ -p 10 --fldMean 280 --fldSD 30 --writeMappings=${outdir}/`basename $i _trimmed.fq.gz`_mappings_info.sam --writeUnmappedNames
+done
